@@ -1,0 +1,268 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppStore } from '../store/useAppStore';
+import { motion } from 'motion/react';
+import { UserPlus, Mail, Lock, User as UserIcon, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { BackgroundUniverse } from '../components/VisualEcosystem';
+import { supabase } from '../lib/supabase';
+
+export default function SignupPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [role, setRole] = useState<'student' | 'teacher'>('student');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  const navigate = useNavigate();
+  const setUser = useAppStore((state) => state.setUser);
+  const setSession = useAppStore((state) => state.setSession);
+  const addNotification = useAppStore((state) => state.addNotification);
+
+  const isDatabaseConfigured = !!((import.meta as any).env.VITE_SUPABASE_URL && (import.meta as any).env.VITE_SUPABASE_ANON_KEY);
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    // 1. Force Hardcoded Admin Trap Bypass
+    if (email === 'admin@stjohnedusolver.com' && password === 'stjohnadmin@2') {
+      setTimeout(() => {
+        setUser({
+          id: 'admin-mock-id',
+          email: 'admin@stjohnedusolver.com',
+          full_name: 'Root Administrator',
+          role: 'admin',
+          points: 5000,
+          force_password_reset: false,
+          focus_mode: false
+        });
+        setSession({ user: { id: 'admin-mock-id' } });
+        addNotification({
+          type: 'announcement',
+          title: 'Root Access Granted',
+          content: 'Administrator session initiated. Welcome, Commander.'
+        });
+        setIsLoading(false);
+        navigate('/admin');
+      }, 500);
+      return;
+    }
+
+    // 2. ABSOLUTE CLIENT-SIDE SANDBOX BYPASS
+    
+    // Quick premium loading state transition phase simulation
+    setTimeout(() => {
+      setUser({
+        id: 'sandbox-mock-uid',
+        email: email || 'scholar@smartacademy.edu',
+        full_name: fullName || 'Demo User',
+        role: role || 'student',
+        points: 120,
+        force_password_reset: false,
+        focus_mode: false
+      });
+      setSession({ user: { id: 'sandbox-mock-uid' } });
+      addNotification({
+        type: 'announcement',
+        title: 'Profile Ghost-Provisioned',
+        content: 'Sandbox: Local profile simulation active. Proceeding to login.'
+      });
+      setIsLoading(false);
+      
+      if (role === 'teacher') {
+        navigate('/teacher');
+      } else {
+        navigate('/dashboard');
+      }
+    }, 500);
+  };
+
+  const handleGoogleSignup = async () => {
+    if (!isDatabaseConfigured) {
+      setIsLoading(true);
+      setTimeout(() => {
+        const mockId = `google-${Math.random().toString(36).substr(2, 9)}`;
+        setUser({
+          id: mockId,
+          email: 'google-user@edu.vault',
+          full_name: 'Cloud Scholar',
+          role: role,
+          focus_mode: false
+        });
+        setSession({ user: { id: mockId } });
+        addNotification({
+          type: 'announcement',
+          title: 'OAuth Stream Intercepted',
+          content: 'Sandbox: Simulated Google identity linked successfully.'
+        });
+        setIsLoading(false);
+        navigate('/login');
+      }, 1200);
+      return;
+    }
+
+    localStorage.setItem('pending_role', role);
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}` }
+    });
+  };
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-slate-50 flex items-center justify-center font-sans">
+      <BackgroundUniverse />
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="w-full max-w-md p-2 relative z-10"
+      >
+        <div className="bg-white/40 backdrop-blur-2xl border border-white/80 rounded-[40px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] p-10 md:p-12 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 to-indigo-500" />
+          
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+            <div className="w-20 h-20 bg-gradient-to-tr from-fuchsia-600 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-fuchsia-200 border-4 border-white">
+              <UserPlus className="text-white" size={32} />
+            </div>
+          </div>
+
+          <div className="text-center mb-10 pt-8">
+            <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 mb-2">Create Account</h1>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
+              <Sparkles size={12} className="text-fuchsia-400" /> Join the Ecosystem
+            </p>
+          </div>
+
+          {/* Identity Selector */}
+          <div className="bg-slate-100 p-1 rounded-2xl flex items-center gap-1 mb-8">
+            <button 
+              onClick={() => setRole('student')}
+              className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                role === 'student' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Student
+            </button>
+            <button 
+              onClick={() => setRole('teacher')}
+              className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                role === 'teacher' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              Teacher
+            </button>
+          </div>
+
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Full Legal Name</label>
+              <div className="relative group">
+                <UserIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                <input 
+                  type="text" 
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Davo Scholar"
+                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Institute Email</label>
+              <div className="relative group">
+                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                <input 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="scholar@stjohnedusolver.com"
+                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Cipher Key</label>
+              <div className="relative group">
+                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-fuchsia-500 transition-colors" size={18} />
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
+                  required
+                />
+              </div>
+            </div>
+
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="bg-red-50/50 backdrop-blur-sm border border-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest px-4 py-3 rounded-2xl flex items-center gap-3"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                {error}
+              </motion.div>
+            )}
+
+            <motion.button 
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-slate-900 text-white rounded-2xl py-5 font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-2xl disabled:opacity-70 mt-4"
+            >
+              {isLoading ? <Loader2 className="animate-spin" size={18} /> : (
+                <>Initialize Profile <ArrowRight size={18} /></>
+              )}
+            </motion.button>
+          </form>
+
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-[8px] font-black uppercase tracking-widest">
+              <span className="bg-white/40 backdrop-blur-md px-4 text-slate-400">Identity Provisioning</span>
+            </div>
+          </div>
+
+          <motion.button 
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGoogleSignup}
+            className="w-full bg-white/60 border border-slate-200 text-slate-700 rounded-2xl py-4 font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:bg-white transition-all shadow-sm"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </motion.button>
+
+          <p className="text-center mt-8 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+            Already have clearance? <button onClick={() => navigate('/login')} className="text-indigo-600 hover:underline">Log In</button>
+          </p>
+        </div>
+
+        <motion.button 
+          whileHover={{ x: 5, color: '#4f46e5' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate('/')}
+          className="mt-12 mx-auto flex items-center gap-3 text-slate-400 transition-all text-[10px] font-black uppercase tracking-[0.3em]"
+        >
+          Return to Portal Root
+        </motion.button>
+      </motion.div>
+    </div>
+  );
+}

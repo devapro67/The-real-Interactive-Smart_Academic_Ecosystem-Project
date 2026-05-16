@@ -1,0 +1,8 @@
+{
+  "name": "Smart Academic Ecosystem",
+  "description": "A premium, next-generation school operating platform with AI-powered study aids, teacher tools, and administrative analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
