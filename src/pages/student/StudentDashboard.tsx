@@ -43,13 +43,13 @@ const ModuleCard = ({
       whileHover={{ scale: 1.02, y: -4 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => navigate(path)}
-      className="stagger-card group text-left glass-card rounded-[32px] p-8 hover:bg-white/[0.08] transition-all relative z-10 flex flex-col h-full"
+      className="stagger-card group text-left glass-card rounded-4xl p-8 hover:bg-white/8 transition-all relative z-10 flex flex-col h-full"
     >
       <div className={`w-14 h-14 rounded-2xl ${color.includes('nordic') ? 'nordic-gradient' : color} flex items-center justify-center mb-6 shadow-lg transition-transform group-hover:rotate-6`}>
         <Icon className={color.includes('nordic') ? 'text-obsidian' : 'text-white'} size={28} />
       </div>
       <h3 className="text-xl font-bold text-slate-900 mb-2 tracking-tight">{title}</h3>
-      <p className="text-slate-700 text-sm font-medium leading-relaxed mb-6 flex-grow">{description}</p>
+      <p className="text-slate-700 text-sm font-medium leading-relaxed mb-6 grow">{description}</p>
       
       {stats && (
         <div className="bg-slate-50 rounded-2xl p-4 mb-6 space-y-2 border border-slate-100">
@@ -152,7 +152,7 @@ export default function StudentDashboard() {
                   { title: "Neural Networks Lab Report", due: "Tomorrow", type: "Critical", color: "bg-cyber-amber" },
                   { title: "Applied Mathematics Problem Set", due: "3 Days", type: "Routine", color: "bg-emerald-500" }
                 ].map((task, i) => (
-                  <div key={i} className="flex items-center justify-between p-6 bg-white/50 rounded-[2rem] border border-slate-100 hover:bg-white hover:shadow-lg transition-all cursor-pointer group">
+                  <div key={i} className="flex items-center justify-between p-6 bg-white/50 rounded-4xl border border-slate-100 hover:bg-white hover:shadow-lg transition-all cursor-pointer group">
                     <div className="flex items-center gap-5">
                       <div className={`w-3 h-3 rounded-full ${task.color} shadow-lg`} />
                       <div>

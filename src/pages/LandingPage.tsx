@@ -34,7 +34,7 @@ const FeatureCard = ({ icon: Icon, title, features, color }: FeatureCardProps) =
     <motion.div 
       whileHover={{ scale: 1.05, y: -10, rotate: 0.5 }}
       whileTap={{ scale: 0.98 }}
-      className="feature-card opacity-0 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 shadow-sm hover:shadow-2xl hover:bg-white/60 transition-all duration-500 group cursor-pointer"
+      className="feature-card opacity-0 bg-white/40 backdrop-blur-xl border border-white/60 rounded-4xl p-8 shadow-sm hover:shadow-2xl hover:bg-white/60 transition-all duration-500 group cursor-pointer"
     >
       <motion.div 
         whileHover={{ rotate: 12, scale: 1.1 }}
@@ -166,14 +166,14 @@ export default function LandingPage() {
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-slate-50 selection:bg-indigo-100 font-sans overflow-x-hidden">
-      <div className="fixed top-[-100px] left-[-100px] w-[500px] h-[500px] bg-indigo-100 rounded-full blur-[120px] opacity-60 z-0 parallax-deep"></div>
-      <div className="fixed bottom-[-100px] right-[-100px] w-[600px] h-[600px] bg-fuchsia-100 rounded-full blur-[120px] opacity-60 z-0 parallax-deep"></div>
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white opacity-40 rounded-full blur-[150px] z-0 parallax-bg"></div>
+      <div className="fixed -top-25 -left-25 w-125 h-125 bg-indigo-100 rounded-full blur-[120px] opacity-60 z-0 parallax-deep"></div>
+      <div className="fixed -bottom-25 -right-25 w-150 h-150 bg-fuchsia-100 rounded-full blur-[120px] opacity-60 z-0 parallax-deep"></div>
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-white opacity-40 rounded-full blur-[150px] z-0 parallax-bg"></div>
 
       <BackgroundUniverse />
 
-      <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[60] pointer-events-none">
-        <div className="text-[10px] font-mono tracking-[0.3em] text-[#00F2FE] bg-[#00F2FE]/10 border border-[#00F2FE]/20 px-3 py-1 rounded-full uppercase backdrop-blur-sm animate-pulse">
+      <div className="fixed top-8 left-1/2 -translate-x-1/2 z-60 pointer-events-none">
+        <div className="text-[10px] font-mono tracking-[0.3em] text-seafoam bg-seafoam/10 border border-seafoam/20 px-3 py-1 rounded-full uppercase backdrop-blur-sm animate-pulse">
           POWERED BY GEMINI 3
         </div>
       </div>
@@ -182,19 +182,19 @@ export default function LandingPage() {
         <div className="w-full max-w-6xl flex flex-col items-center text-center relative z-10">
           <h1 ref={titleRef} className="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.85] mb-8">
             <span className="text-slate-800">Smart Academic</span> <br/>
-            <span className="text-[#00F2FE] items-baseline">Ecosystem</span>
+            <span className="text-seafoam items-baseline">Ecosystem</span>
           </h1>
 
           <div className="landing-actions mt-8 flex justify-center gap-6 items-center z-50 relative mb-16">
             <Link 
               to="/login" 
-              className="px-8 py-3 text-sm font-semibold tracking-wide uppercase bg-white/80 border border-white text-slate-800 backdrop-blur-md rounded-2xl transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:border-[#4FACFE] hover:text-[#00F2FE] hover:scale-105 active:scale-95"
+              className="px-8 py-3 text-sm font-semibold tracking-wide uppercase bg-white/80 border border-white text-slate-800 backdrop-blur-md rounded-2xl transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:border-seafoam hover:text-seafoam hover:scale-105 active:scale-95"
             >
               Log In
             </Link>
             <Link 
               to="/signup" 
-              className="px-8 py-3 text-sm font-semibold tracking-wide uppercase bg-gradient-to-r from-[#00F2FE] to-[#4FACFE] text-slate-900 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(0,242,254,0.3)] font-bold hover:scale-105 hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] active:scale-95"
+              className="px-8 py-3 text-sm font-semibold tracking-wide uppercase bg-linear-to-r from-seafoam to-seafoam text-slate-900 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:scale-105 hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] active:scale-95"
             >
               Sign Up
             </Link>
@@ -205,7 +205,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02, y: -5 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleStudentLogin} 
-              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
+              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-4xl p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
             >
                <h3 className="text-2xl font-black text-slate-900 mb-2">Student Suite Cluster</h3>
                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Interactive R3F workspace for high-performance learning.</p>
@@ -217,7 +217,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02, y: -5 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate('/login')} 
-              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
+              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-4xl p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
             >
                <h3 className="text-2xl font-black text-slate-900 mb-2">Teacher Command Node</h3>
                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">AI-driven instruction tools for curriculum excellence.</p>
@@ -229,7 +229,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02, y: -5 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleAdminTrap} 
-              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-[32px] p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
+              className="hero-card bg-white/40 backdrop-blur-xl border border-white/60 rounded-4xl p-8 text-left shadow-sm hover:shadow-2xl transition-all group cursor-pointer"
             >
                <h3 className="text-2xl font-black text-slate-900 mb-2">Admin Root Dashboard</h3>
                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Telemetric system control and academic auditing.</p>
@@ -241,13 +241,13 @@ export default function LandingPage() {
         </div>
 
         <div className="absolute bottom-8 left-0 right-0 z-30 flex justify-between px-12 w-full pointer-events-none">
-          <div className="status-pill flex items-center gap-3 bg-white/[0.02] backdrop-blur-md border border-white/[0.08] text-slate-800 text-[11px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg pointer-events-auto">
-            <Sparkles size={14} className="text-[#00F2FE]" />
+          <div className="status-pill flex items-center gap-3 bg-white/2 backdrop-blur-md border border-white/8 text-slate-800 text-[11px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg pointer-events-auto">
+            <Sparkles size={14} className="text-seafoam" />
             <span>14.2K+ Academic Queries Automated via Gemini 3 Deep Core</span>
           </div>
 
-          <div className="status-pill flex items-center gap-3 bg-white/[0.02] backdrop-blur-md border border-white/[0.08] text-slate-800 text-[11px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg pointer-events-auto">
-            <Zap size={14} className="text-[#00F2FE]" />
+          <div className="status-pill flex items-center gap-3 bg-white/2 backdrop-blur-md border border-white/8 text-slate-800 text-[11px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-lg pointer-events-auto">
+            <Zap size={14} className="text-seafoam" />
             <span>Sub-60ms Architecture Latency. Optimized for Institutional Scale</span>
           </div>
         </div>
@@ -331,7 +331,7 @@ export default function LandingPage() {
           <div className="relative aspect-square bg-white/20 backdrop-blur-3xl rounded-[64px] overflow-hidden flex items-center justify-center border border-white/40 shadow-inner">
              <Layers className="text-indigo-100 opacity-20" size={300} />
              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-48 h-48 bg-gradient-to-tr from-indigo-500/20 to-fuchsia-500/20 rounded-full animate-pulse blur-3xl" />
+                <div className="w-48 h-48 bg-linear-to-tr from-indigo-500/20 to-fuchsia-500/20 rounded-full animate-pulse blur-3xl" />
              </div>
              <Sparkles className="text-indigo-600 relative z-10" size={80} />
           </div>
@@ -387,4 +387,3 @@ export default function LandingPage() {
     </div>
   );
 }
-

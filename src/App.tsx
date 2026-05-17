@@ -33,10 +33,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   
   return (
-    <div className="relative flex h-screen overflow-hidden bg-slate-50 font-sans selection:bg-indigo-100">
+    <div className="relative flex h-screen overflow-hidden bg-slate-50 font-sans selection:bg-indigo-100 [&_.fixed.top-6.left-6]:hidden">
       {/* Structural Mesh Gradients */}
-      <div className="absolute top-[-100px] left-[-100px] w-[500px] h-[500px] bg-indigo-50 rounded-full blur-[100px] opacity-40"></div>
-      <div className="absolute bottom-[-100px] right-[-100px] w-[600px] h-[600px] bg-fuchsia-50 rounded-full blur-[100px] opacity-40"></div>
+      <div className="absolute -top-25 -left-25 w-125 h-125 bg-indigo-50 rounded-full blur-[100px] opacity-40"></div>
+      <div className="absolute -bottom-25 -right-25 w-150 h-150 bg-fuchsia-50 rounded-full blur-[100px] opacity-40"></div>
 
       <Sidebar />
 
@@ -86,14 +86,30 @@ const GlobalBackButton = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname === '/') return null;
+  // Force the back button to destroy itself on the landing page AND any inner dashboard panel paths
+  if (
+    location.pathname === '/' || 
+    location.pathname.startsWith('/dashboard') ||
+    location.pathname.startsWith('/admin') ||
+    location.pathname.startsWith('/teacher') ||
+    location.pathname === '/homework-helper' ||
+    location.pathname === '/study-planner' ||
+    location.pathname === '/collaboration-hub' ||
+    location.pathname === '/grade-analyzer' ||
+    location.pathname === '/noticeboard' ||
+    location.pathname === '/attendance' ||
+    location.pathname === '/resource-hub' ||
+    location.pathname === '/wellness'
+  ) {
+    return null;
+  }
 
   return (
     <motion.button
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       onClick={() => navigate(-1)}
-      className="fixed top-6 left-6 z-[100] flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white/20 group text-slate-200 cursor-pointer"
+      className="fixed top-6 left-6 z-100 flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white/20 group text-slate-200 cursor-pointer"
     >
       <span className="inline-block transition-transform duration-300 group-hover:-translate-x-1">←</span>
       Back

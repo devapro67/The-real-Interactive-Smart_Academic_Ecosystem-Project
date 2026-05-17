@@ -105,9 +105,13 @@ export default function Sidebar() {
         >
           <div className="p-8 pb-4">
             <div className="flex items-center gap-3 mb-12 group cursor-pointer" onClick={() => navigate('/')}>
-              <div className="w-12 h-12 nordic-gradient rounded-2xl flex items-center justify-center shadow-xl shadow-cyan/20 group-hover:scale-110 transition-transform">
-                <span className="text-obsidian font-bold text-2xl">S</span>
-              </div>
+              {/* FIXED: Replaced the old "S" letter block with your micro brand logo image element */}
+              <div className="w-35 h-30 nordic-gradient rounded-2xl flex items-center justify-center shadow-xl shadow-cyan/20 group-hover:scale-105 transition-transform overflow-hidden p-0">
+              <img 
+              src="/logo.png"
+              alt="Smart Academic Ecosystem Logo"
+              className="w-full h-full object-cover"/>
+</div>
               <div className="flex flex-col">
                 <h1 className="text-lg font-black tracking-tighter text-white mb-0 leading-none">Smart Academic</h1>
                 <span className="text-[10px] font-bold text-seafoam uppercase tracking-widest">Ecosystem v4.0</span>

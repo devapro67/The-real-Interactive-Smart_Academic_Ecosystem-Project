@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { motion } from 'motion/react';
-import { Shield, Lock, Mail, ArrowRight, Loader2, Star, User } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Loader2, Star, Eye, EyeOff } from 'lucide-react';
 import { BackgroundUniverse } from '../components/VisualEcosystem';
 import { supabase } from '../lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [role, setRole] = useState<'student' | 'teacher'>('student');
@@ -50,8 +51,6 @@ export default function LoginPage() {
     }
 
     // 2. ABSOLUTE CLIENT-SIDE SANDBOX BYPASS
-    
-    // Quick premium loading state transition phase simulation
     setTimeout(() => {
       setUser({
         id: 'sandbox-mock-uid',
@@ -111,7 +110,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-slate-50 flex items-center justify-center font-sans">
+    /* FIXED: Adjusted to min-h-screen and overflow-y-auto to allow scaling and scrolling layout */
+    <div className="relative w-full min-h-screen overflow-y-auto bg-slate-50 flex items-center justify-center font-sans py-16">
       <BackgroundUniverse />
 
       <motion.div 
@@ -120,16 +120,17 @@ export default function LoginPage() {
         transition={{ duration: 0.8, ease: 'backOut' }}
         className="w-full max-w-md p-2 relative z-10"
       >
-        <div className="bg-white/40 backdrop-blur-2xl border border-white/80 rounded-[40px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] p-10 md:p-12 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500" />
+        <div className="bg-white/40 backdrop-blur-2xl border border-white/80 rounded-[40px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] p-10 md:p-12 relative overflow-visible">
+          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-indigo-500 to-fuchsia-500" />
           
-          <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-            <div className="w-20 h-20 bg-gradient-to-tr from-indigo-600 to-fuchsia-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-200 border-4 border-white">
-              <Shield className="text-white" size={32} />
+          {/* LOGO BADGE: Swapped out purple block container for the centered white circle badge layout */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2">
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl border-4 border-white overflow-hidden">
+              <img src="/logo.png" alt="Smart Academic Ecosystem Logo" className="w-full h-full object-contain p-2 scale-125" />
             </div>
           </div>
 
-          <div className="text-center mb-10 pt-8">
+          <div className="text-center mb-10 pt-12">
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 mb-2">Workspace Access</h1>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center justify-center gap-2">
               <Star size={12} className="text-indigo-400" /> Secure Terminal v4.0.2
@@ -139,6 +140,7 @@ export default function LoginPage() {
           {/* Identity Selector */}
           <div className="bg-slate-100 p-1 rounded-2xl flex items-center gap-1 mb-8">
             <button 
+              type="button"
               onClick={() => setRole('student')}
               className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 role === 'student' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'
@@ -147,6 +149,7 @@ export default function LoginPage() {
               Student
             </button>
             <button 
+              type="button"
               onClick={() => setRole('teacher')}
               className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                 role === 'teacher' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400 hover:text-slate-600'
@@ -161,29 +164,40 @@ export default function LoginPage() {
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Institute Identity</label>
               <div className="relative group">
                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
+                {/* FIXED: Added text-slate-900 */}
                 <input 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="scholar@stjohnedusolver.com"
-                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
+                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Access Protocol</label>
+              {/* FIXED: Renamed label context block from Access Protocol to Password */}
+              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Password</label>
               <div className="relative group">
                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-fuchsia-500 transition-colors" size={18} />
+                {/* FIXED: Added dynamic type configuration along with explicit text-slate-900 */}
                 <input 
-                  type="password" 
+                  type={showPassword ? "text" : "password"} 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-6 py-4 text-sm outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
+                  className="w-full bg-white/60 border border-slate-200 rounded-2xl pl-12 pr-12 py-4 text-sm text-slate-900 outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm font-bold"
                   required
                 />
+                {/* FIXED: Added action toggle container wrapper button containing Lucide visibility eyes */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -216,13 +230,14 @@ export default function LoginPage() {
               <div className="w-full border-t border-slate-200"></div>
             </div>
             <div className="relative flex justify-center text-[8px] font-black uppercase tracking-widest">
-              <span className="bg-white/40 backdrop-blur-md px-4 text-slate-400">Security Bypass Options</span>
+              <span className="bg-white px-4 text-slate-400">Security Bypass Options</span>
             </div>
           </div>
 
           <motion.button 
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
+            type="button"
             onClick={handleGoogleLogin}
             className="w-full bg-white/60 border border-slate-200 text-slate-700 rounded-2xl py-4 font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:bg-white transition-all shadow-sm"
           >

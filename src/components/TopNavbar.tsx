@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 export default function TopNavbar() {
+  const location = useLocation();
   const { isFocusMode, setFocusMode, isSidebarOpen, setSidebarOpen, user, notifications, markNotificationAsRead } = useAppStore();
   const [scrolled, setScrolled] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -25,7 +27,7 @@ export default function TopNavbar() {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <nav className={`sticky top-0 z-[60] w-full transition-all duration-500 flex items-center justify-between px-6 py-4 ${
+    <nav className={`sticky top-0 z-60 w-full transition-all duration-500 flex items-center justify-between px-6 py-4 ${
       scrolled ? 'bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-sm' : 'bg-transparent'
     }`}>
       <div className="flex items-center gap-4">
@@ -40,6 +42,9 @@ export default function TopNavbar() {
           </motion.button>
         )}
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+          {location.pathname.includes('/dashboard') && (
+            <span>Dashboard</span>
+          )}
           <span>Academic Hub</span>
           <ChevronRight size={12} />
           <span className="text-indigo-600">{user?.role} Suite</span>
@@ -80,14 +85,14 @@ export default function TopNavbar() {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-4 w-80 bg-white/80 backdrop-blur-2xl border border-white/80 rounded-[32px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] p-6 z-50 overflow-hidden"
+                  className="absolute right-0 mt-4 w-80 bg-white/80 backdrop-blur-2xl border border-white/80 rounded-4xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] p-6 z-50 overflow-hidden"
                 >
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-800">System Feed</h3>
                     <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{unreadCount} New</span>
                   </div>
                   
-                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="space-y-4 max-h-100 overflow-y-auto pr-2 custom-scrollbar">
                     {notifications.length > 0 ? notifications.map((n) => (
                       <div 
                         key={n.id} 
@@ -133,11 +138,11 @@ export default function TopNavbar() {
         <div className="h-6 w-px bg-slate-200" />
 
         <div className="flex items-center gap-3 pl-2">
-          <div className="flex flex-col items-end hidden sm:flex">
+          <div className="flex flex-col items-end sm:flex">
             <span className="text-xs font-black text-slate-800 uppercase tracking-tighter">{user?.full_name?.split(' ')[0]}</span>
             <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Level 12 Scholar</span>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-slate-200 to-slate-100 border border-white shadow-sm flex items-center justify-center overflow-hidden">
+          <div className="w-10 h-10 rounded-2xl bg-linear-to-tr from-slate-200 to-slate-100 border border-white shadow-sm flex items-center justify-center overflow-hidden">
              {user?.avatar_url ? (
                <img src={user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
              ) : (
