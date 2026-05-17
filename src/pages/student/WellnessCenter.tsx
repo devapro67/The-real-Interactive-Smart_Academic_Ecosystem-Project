@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Heart, 
-  Smile, 
   Wind, 
   Coffee, 
   Headphones, 
@@ -140,7 +139,7 @@ export default function WellnessCenter() {
                  <div className="relative z-10 grid grid-cols-2 gap-3 pb-4">
                     <button 
                        onClick={() => { setBreakTimer(5); setIsTimerRunning(true); }}
-                       className="py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all font-bold"
+                      className="py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all"
                     >
                        Micro (5m)
                     </button>
@@ -189,7 +188,7 @@ export default function WellnessCenter() {
                  </div>
               </div>
 
-              <div className="flex-1 bg-white/5 rounded-3xl border border-white/10 p-6 flex flex-col h-full min-h-[300px]">
+              <div className="flex-1 bg-white/5 rounded-3xl border border-white/10 p-6 flex flex-col h-full min-h-75">
                  <div className="flex-1 flex flex-col items-center justify-center text-center p-8 opacity-40">
                     <Zap className="text-slate-500 mb-4" size={32} />
                     <p className="text-xs font-black uppercase text-white tracking-widest">Neural Link Offline</p>
@@ -243,8 +242,7 @@ export default function WellnessCenter() {
                     {Array.from({ length: 24 }).map((_, i) => (
                       <div 
                         key={i} 
-                        className={`flex-1 rounded-full transition-all ${i > 7 && i < 22 ? 'bg-seafoam' : 'bg-white/5'}`} 
-                        style={{ height: `${Math.random() * 60 + 20}%`, opacity: (i / 24) + 0.2 }}
+                    className={`flex-1 rounded-full transition-all ${i > 7 && i < 22 ? 'bg-seafoam' : 'bg-white/5'} h-[${Math.random() * 60 + 20}%] opacity-[${(i / 24) + 0.2}]`}
                       />
                     ))}
                  </div>

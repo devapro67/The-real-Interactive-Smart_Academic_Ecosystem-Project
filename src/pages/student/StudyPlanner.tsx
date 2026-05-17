@@ -51,7 +51,7 @@ const PomodoroTimer = () => {
   };
 
   return (
-    <div className="bg-slate-900 rounded-[40px] p-10 text-white relative overflow-hidden h-full flex flex-col justify-between shadow-2xl">
+    <div className="bg-slate-900 rounded-4xl p-10 text-white relative overflow-hidden h-full flex flex-col justify-between shadow-2xl">
       <div className="relative z-10">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-1 h-4 bg-fuchsia-500 rounded-full" />
@@ -64,12 +64,14 @@ const PomodoroTimer = () => {
           </div>
           <div className="inline-flex gap-2 p-1 bg-white/5 rounded-full border border-white/10">
             <button 
+              aria-label="Set Focus Mode"
               onClick={() => { setMode('work'); resetTimer(); }}
               className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${mode === 'work' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'}`}
             >
               Focus
             </button>
             <button 
+              aria-label="Set Break Mode"
               onClick={() => { setMode('break'); resetTimer(); }}
               className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${mode === 'break' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'}`}
             >
@@ -83,6 +85,7 @@ const PomodoroTimer = () => {
         <motion.button 
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          aria-label="Reset Pomodoro Timer"
           onClick={resetTimer}
           className="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/10 transition-all text-slate-400 hover:text-white"
         >
@@ -91,8 +94,9 @@ const PomodoroTimer = () => {
         <motion.button 
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
+          aria-label={isActive ? "Pause Focus Session" : "Start Focus Session"}
           onClick={toggleTimer}
-          className="w-20 h-20 bg-white text-slate-900 rounded-[2rem] flex items-center justify-center shadow-xl shadow-white/10"
+          className="w-20 h-20 bg-white text-slate-900 rounded-4xl flex items-center justify-center shadow-xl shadow-white/10"
         >
           {isActive ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
         </motion.button>
@@ -153,11 +157,14 @@ export default function StudyPlanner() {
           </div>
 
           <div className="flex items-center gap-3">
-             <button className="p-4 glass-card border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/5 transition-colors">
+             <button 
+              aria-label="Add new curriculum event"
+              className="p-4 glass-card border border-white/10 rounded-2xl flex items-center justify-center hover:bg-white/5 transition-colors">
                 <Plus size={20} className="text-white" />
              </button>
              <button 
               onClick={handleOptimize}
+              aria-label="Optimize temporal schedule"
               disabled={isOptimizing}
               className="px-6 py-4 nordic-gradient text-obsidian rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-cyan/20 flex items-center gap-3 active:scale-95 transition-all disabled:opacity-50"
              >
@@ -168,13 +175,17 @@ export default function StudyPlanner() {
         </header>
 
         {/* 7-Day Matrix */}
-        <div className="stagger-card glass-card rounded-[48px] p-10 overflow-hidden">
+        <div className="stagger-card glass-card rounded-5xl p-10 overflow-hidden">
           <div className="flex items-center justify-between mb-10">
             <h3 className="text-2xl font-black text-white tracking-tight">Current Academic Cycle</h3>
             <div className="flex items-center gap-2 text-white">
-              <button className="p-2 hover:bg-white/5 rounded-xl transition-colors"><ChevronLeft size={20} /></button>
+              <button 
+                aria-label="Previous week"
+                className="p-2 hover:bg-white/5 rounded-xl transition-colors"><ChevronLeft size={20} /></button>
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">May 12 - May 18</span>
-              <button className="p-2 hover:bg-white/5 rounded-xl transition-colors"><ChevronRight size={20} /></button>
+              <button 
+                aria-label="Next week"
+                className="p-2 hover:bg-white/5 rounded-xl transition-colors"><ChevronRight size={20} /></button>
             </div>
           </div>
 
@@ -182,8 +193,9 @@ export default function StudyPlanner() {
              {days.map((day, i) => (
                <button 
                 key={day}
+                aria-label={`Select ${day}`}
                 onClick={() => setSelectedDay(i)}
-                className={`p-6 rounded-[2.5rem] border transition-all flex flex-col items-center gap-2 group ${selectedDay === i ? 'nordic-gradient border-seafoam text-obsidian shadow-xl shadow-cyan/10' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}
+                className={`p-6 rounded-5xl border transition-all flex flex-col items-center gap-2 group ${selectedDay === i ? 'nordic-gradient border-seafoam text-obsidian shadow-xl shadow-cyan/10' : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'}`}
                >
                  <span className={`text-[10px] font-black uppercase tracking-widest ${selectedDay === i ? 'opacity-60' : 'opacity-40'}`}>{day.substring(0, 3)}</span>
                  <span className="text-2xl font-black">{dates[i]}</span>
@@ -198,7 +210,7 @@ export default function StudyPlanner() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
            {/* Schedule List */}
            <div className="lg:col-span-2 stagger-card">
-              <div className="glass-card rounded-[48px] p-10 h-full">
+              <div className="glass-card rounded-5xl p-10 h-full">
                  <div className="flex items-center justify-between mb-8">
                     <h3 className="text-xl font-black text-white tracking-tight">Daily Itinerary: {days[selectedDay]}</h3>
                     <span className="px-3 py-1 bg-seafoam/10 text-seafoam text-[10px] font-black uppercase tracking-widest rounded-full border border-seafoam/20">4 Target Blocks</span>
@@ -211,11 +223,11 @@ export default function StudyPlanner() {
                       { time: "15:00 - 16:30", subject: "Advanced Literature", activity: "Critique Sync", color: "border-cyber-amber" },
                       { time: "17:00 - 18:00", subject: "Office Hours", activity: "Consultation", color: "border-emerald-500" }
                     ].map((block, i) => (
-                      <div key={i} className={`flex gap-6 p-6 bg-white/5 rounded-[2rem] border border-white/5 border-l-4 ${block.color} shadow-sm group hover:scale-[1.01] transition-transform cursor-pointer`}>
-                        <div className="flex-shrink-0 pt-1">
+                      <div key={i} className={`flex gap-6 p-6 bg-white/5 rounded-4xl border border-white/5 border-l-4 ${block.color} shadow-sm group hover:scale-[1.01] transition-transform cursor-pointer`}>
+                        <div className="shrink-0 pt-1">
                           <Clock className="text-slate-600 group-hover:text-seafoam transition-colors" size={20} />
                         </div>
-                        <div className="flex-grow">
+                        <div className="grow">
                           <div className="flex justify-between items-start">
                              <div>
                                 <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">{block.time}</p>
@@ -223,7 +235,9 @@ export default function StudyPlanner() {
                                 <p className="text-sm font-medium text-slate-400">{block.activity}</p>
                              </div>
                              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button className="p-2 hover:bg-white/5 rounded-lg"><CheckCircle2 size={16} className="text-emerald-500" /></button>
+                                <button 
+                                  aria-label="Mark block as synchronized"
+                                  className="p-2 hover:bg-white/5 rounded-lg"><CheckCircle2 size={16} className="text-emerald-500" /></button>
                              </div>
                           </div>
                         </div>
@@ -240,7 +254,7 @@ export default function StudyPlanner() {
         </div>
 
         {/* Analytics Section */}
-        <section className="stagger-card bg-slate-900 rounded-[48px] p-12 text-white relative overflow-hidden">
+        <section className="stagger-card bg-slate-900 rounded-5xl p-12 text-white relative overflow-hidden">
            <div className="relative z-10 flex flex-col md:flex-row items-center gap-16">
               <div className="flex-1">
                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 rounded-full text-indigo-400 font-black text-[10px] uppercase tracking-widest mb-6 border border-indigo-500/20">

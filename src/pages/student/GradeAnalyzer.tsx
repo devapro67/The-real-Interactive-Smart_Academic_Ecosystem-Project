@@ -3,17 +3,14 @@ import { motion } from 'motion/react';
 import { 
   BarChart3, 
   TrendingUp, 
-  Target, 
   AlertTriangle, 
   ArrowUpRight,
   Calculator,
   Brain,
-  CheckCircle2,
-  Lock
 } from 'lucide-react';
 import { BackgroundUniverse } from '../../components/VisualEcosystem';
 import gsap from 'gsap';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
   { name: 'Sem 1', gpa: 3.2 },
@@ -23,6 +20,18 @@ const data = [
   { name: 'Sem 5', gpa: 3.6 },
   { name: 'Sem 6', gpa: 3.8 },
 ];
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900 border-none rounded-2xl p-4 shadow-2xl">
+        <p className="text-white text-xs font-black uppercase tracking-widest mb-1">{label}</p>
+        <p className="text-indigo-400 text-sm font-bold">GPA: {payload[0].value}</p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function GradeAnalyzer() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,16 +79,18 @@ export default function GradeAnalyzer() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
            {/* Section 1: Progress Analytics */}
-           <div className="lg:col-span-2 stagger-el bg-white/10 backdrop-blur-md border border-white/20 rounded-[48px] p-10">
+           <div className="lg:col-span-2 stagger-el bg-white/10 backdrop-blur-md border border-white/20 rounded-4xl p-10">
               <div className="flex items-center justify-between mb-8">
                  <h3 className="text-2xl font-black text-slate-900 tracking-tight">Academic Trend Vector</h3>
-                 <select className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-bold text-slate-500 outline-none">
+                 <select 
+                    aria-label="Filter semester results"
+                    className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-bold text-slate-500 outline-none">
                     <option>All Semesters</option>
                     <option>Year 3 only</option>
                  </select>
               </div>
 
-              <div className="h-[300px] w-full">
+              <div className="h-72 w-full">
                  <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={data}>
                        <defs>
@@ -90,11 +101,7 @@ export default function GradeAnalyzer() {
                        </defs>
                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fontWeight: 900, fill: '#94a3b8' }} />
                        <YAxis hide={true} domain={[0, 4.5]} />
-                       <Tooltip 
-                          contentStyle={{ background: '#0f172a', border: 'none', borderRadius: '16px' }}
-                          itemStyle={{ color: '#fff', fontSize: '12px' }}
-                          cursor={{ stroke: '#4f46e5', strokeWidth: 2 }}
-                       />
+                       <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#4f46e5', strokeWidth: 2 }} />
                        <Area type="monotone" dataKey="gpa" stroke="#4f46e5" strokeWidth={4} fillOpacity={1} fill="url(#colorGpa)" />
                     </AreaChart>
                  </ResponsiveContainer>
@@ -116,7 +123,7 @@ export default function GradeAnalyzer() {
 
            {/* Section 2: AI Alerts & Predictions */}
            <div className="stagger-el flex flex-col gap-8">
-              <div className="bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden flex-1 shadow-2xl">
+              <div className="bg-slate-900 rounded-3xl p-8 text-white relative overflow-hidden flex-1 shadow-2xl">
                  <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-6">
                        <Brain className="text-indigo-500" size={20} />
@@ -124,14 +131,14 @@ export default function GradeAnalyzer() {
                     </div>
                     <div className="space-y-4">
                        <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex gap-4">
-                          <AlertTriangle className="text-amber-500 flex-shrink-0" size={18} />
+                          <AlertTriangle className="text-amber-500 shrink-0" size={18} />
                           <div>
                              <h4 className="text-xs font-black uppercase tracking-widest mb-1">Mathematics Downward Drift</h4>
                              <p className="text-[11px] text-slate-400 font-medium">Model predicts a 8% dip in Semester 7 based on current participation metrics.</p>
                           </div>
                        </div>
                        <div className="p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/10 flex gap-4">
-                          <TrendingUp className="text-emerald-500 flex-shrink-0" size={18} />
+                          <TrendingUp className="text-emerald-500 shrink-0" size={18} />
                           <div>
                              <h4 className="text-xs font-black uppercase tracking-widest mb-1">Physics Velocity Peak</h4>
                              <p className="text-[11px] text-slate-400 font-medium">Optimal comprehension detected. Recommended: Take Honors Physics next quarter.</p>
@@ -139,16 +146,20 @@ export default function GradeAnalyzer() {
                        </div>
                     </div>
                  </div>
-                 <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 blur-[80px]" />
+                 <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 blur-3xl" />
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-[40px] p-8 flex flex-col justify-between shadow-sm border-t-8 border-t-indigo-600">
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 flex flex-col justify-between shadow-sm border-t-8 border-t-indigo-600">
                  <div>
                     <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">GPA Simulator</h3>
                     <p className="text-slate-500 text-[11px] font-medium mb-6">Target 4.0? Required Sem 7: <span className="text-slate-900 font-black">3.95</span></p>
                     
                     <div className="space-y-4">
-                       <input type="range" className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600" />
+                       <input 
+                         type="range" 
+                         aria-label="Adjust GPA target slider"
+                         className="w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600" 
+                       />
                        <div className="flex justify-between items-center bg-white border border-slate-100 p-4 rounded-xl">
                           <Calculator size={16} className="text-slate-400" />
                           <span className="text-lg font-black text-slate-900">3.88</span>
@@ -156,7 +167,9 @@ export default function GradeAnalyzer() {
                        </div>
                     </div>
                  </div>
-                 <button className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] mt-8 hover:bg-black transition-colors">
+                 <button 
+                   aria-label="Commit simulated goal to academic targets"
+                   className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] mt-8 hover:bg-black transition-colors">
                     Commit To Target
                  </button>
               </div>
@@ -167,7 +180,9 @@ export default function GradeAnalyzer() {
         <div className="stagger-el">
            <div className="flex items-center justify-between mb-8">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Cognitive Domain Breakdown</h3>
-              <button className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Export Transcript</button>
+              <button 
+                aria-label="Export grade transcript as PDF"
+                className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Export Transcript</button>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
@@ -176,7 +191,7 @@ export default function GradeAnalyzer() {
                 { subject: "History", grade: "B+", rank: "Top 25%", color: "text-amber-500" },
                 { subject: "Economics", grade: "A", rank: "Top 8%", color: "text-emerald-500" }
               ].map((sub, i) => (
-                <div key={i} className="bg-white/40 backdrop-blur-md border border-white/20 p-8 rounded-[2.5rem] hover:scale-[1.05] transition-all cursor-pointer">
+                <div key={i} className="bg-white/40 backdrop-blur-md border border-white/20 p-8 rounded-3xl hover:scale-105 transition-all cursor-pointer">
                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{sub.subject}</p>
                    <div className="flex items-baseline gap-3">
                       <span className={`text-4xl font-black ${sub.color}`}>{sub.grade}</span>

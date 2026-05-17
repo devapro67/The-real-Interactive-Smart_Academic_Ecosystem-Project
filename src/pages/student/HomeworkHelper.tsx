@@ -10,9 +10,7 @@ import {
   Plus, 
   MessageSquare, 
   Edit3, 
-  MoreVertical, 
   Trash2,
-  ChevronRight,
   Zap
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -72,7 +70,7 @@ export default function HomeworkHelper() {
 
   const handleCreateThread = () => {
     const newThread: Thread = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       title: 'New Neural Thread',
       subject: 'General',
       messages: [],
@@ -176,6 +174,7 @@ The result converges towards a stable equilibrium point at:
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            aria-label="Create new neural thread"
             onClick={handleCreateThread}
             className="p-2 bg-white/5 border border-white/10 rounded-xl text-white hover:bg-white/10 transition-all font-bold"
           >
@@ -189,7 +188,7 @@ The result converges towards a stable equilibrium point at:
               layout
               key={thread.id}
               onClick={() => setActiveThreadId(thread.id)}
-              className={`group flex items-center justify-between p-5 rounded-[2rem] border transition-all cursor-pointer relative overflow-hidden ${
+              className={`group flex items-center justify-between p-5 rounded-4xl border transition-all cursor-pointer relative overflow-hidden ${
                 activeThreadId === thread.id 
                   ? 'nordic-gradient border-seafoam shadow-xl shadow-cyan/20' 
                   : 'bg-white/5 border-white/5 text-slate-500 hover:bg-white/10 hover:border-white/10'
@@ -200,6 +199,7 @@ The result converges towards a stable equilibrium point at:
                 {isRenaming === thread.id ? (
                   <input
                     autoFocus
+                    aria-label="Rename thread"
                     value={renameValue}
                     onChange={(e) => setRenameValue(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleRename(thread.id, renameValue)}
@@ -208,7 +208,7 @@ The result converges towards a stable equilibrium point at:
                   />
                 ) : (
                   <div>
-                    <p className={`text-[11px] font-black uppercase tracking-widest truncate max-w-[120px] ${activeThreadId === thread.id ? 'text-obsidian' : 'text-white'}`}>
+                    <p className={`text-[11px] font-black uppercase tracking-widest truncate max-w-30 ${activeThreadId === thread.id ? 'text-obsidian' : 'text-white'}`}>
                       {thread.title}
                     </p>
                     <p className={`text-[8px] font-bold uppercase tracking-widest ${activeThreadId === thread.id ? 'text-obsidian/60' : 'text-slate-600'}`}>
@@ -220,6 +220,7 @@ The result converges towards a stable equilibrium point at:
 
               <div className="flex items-center gap-1 relative z-10 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
+                  aria-label="Rename thread"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsRenaming(thread.id);
@@ -231,6 +232,7 @@ The result converges towards a stable equilibrium point at:
                 </button>
                 {threads.length > 1 && (
                   <button 
+                    aria-label="Delete thread"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteThread(thread.id);
@@ -245,7 +247,7 @@ The result converges towards a stable equilibrium point at:
           ))}
         </div>
 
-        <div className="glass-card p-6 rounded-[32px] border border-white/5">
+        <div className="glass-card p-6 rounded-4xl border border-white/5">
           <div className="flex items-center gap-3 mb-4">
             <Zap className="text-cyber-amber" size={16} />
             <h3 className="text-[10px] font-black uppercase tracking-widest text-white">Gemini 3 Insights</h3>
@@ -282,13 +284,13 @@ The result converges towards a stable equilibrium point at:
           </div>
         </header>
 
-        <div className="flex-1 min-h-0 glass-card rounded-[48px] overflow-hidden flex flex-col shadow-inner">
+        <div className="flex-1 min-h-0 glass-card rounded-5xl overflow-hidden flex flex-col shadow-inner">
           <div className="flex-1 overflow-y-auto p-10 space-y-10 custom-scrollbar">
             {activeThread?.messages.length === 0 && (
               <div className="h-full flex flex-col items-center justify-center text-center p-12">
-                <div className="w-24 h-24 nordic-gradient rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-cyan/20 mb-10 animate-pulse relative">
+                <div className="w-24 h-24 nordic-gradient rounded-4xl flex items-center justify-center shadow-2xl shadow-cyan/20 mb-10 animate-pulse relative">
                   <Sparkles className="text-obsidian" size={48} />
-                  <div className="absolute inset-0 bg-white/20 rounded-[2.5rem] animate-ping" style={{ animationDuration: '3s' }} />
+                  <div className="absolute inset-0 bg-white/20 rounded-4xl animate-ping [animation-duration:3s]" />
                 </div>
                 <h3 className="text-3xl font-black text-white mb-4 tracking-tight">Buffer Initialized</h3>
                 <p className="text-slate-500 max-w-sm font-medium leading-relaxed">
@@ -299,7 +301,7 @@ The result converges towards a stable equilibrium point at:
                     <button 
                       key={t}
                       onClick={() => setInput(t)}
-                      className="px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-seafoam transition-all transition-all"
+                      className="px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-seafoam transition-all"
                     >
                       {t}
                     </button>
@@ -318,7 +320,7 @@ The result converges towards a stable equilibrium point at:
                 >
                   <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} max-w-[80%]`}>
                     <div 
-                      className={`px-10 py-8 rounded-[3rem] shadow-2xl transition-all relative overflow-hidden ${
+                      className={`px-10 py-8 rounded-5xl shadow-2xl transition-all relative overflow-hidden ${
                         msg.role === 'user' 
                           ? 'bg-obsidian text-white rounded-tr-none border border-white/10' 
                           : 'glass-card text-white rounded-tl-none border border-white/10'
@@ -348,7 +350,7 @@ The result converges towards a stable equilibrium point at:
 
             {isLoading && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                <div className="glass-card px-10 py-8 rounded-[3rem] rounded-tl-none border border-white/10 flex items-center gap-4">
+                <div className="glass-card px-10 py-8 rounded-5xl rounded-tl-none border border-white/10 flex items-center gap-4">
                   <div className="relative">
                     <Loader2 size={24} className="animate-spin text-seafoam" />
                     <div className="absolute inset-0 blur-md bg-seafoam/30 animate-pulse" />
@@ -371,12 +373,14 @@ The result converges towards a stable equilibrium point at:
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder={`Transmit your query to Gemini 3...`}
-                className="w-full bg-obsidian/40 hover:bg-obsidian/60 border border-white/10 rounded-[2.5rem] px-10 py-6 text-sm text-white outline-none focus:border-seafoam/50 focus:ring-4 focus:ring-seafoam/5 transition-all shadow-2xl placeholder:text-slate-600 font-medium"
+                aria-label="Homework query input"
+                className="w-full bg-obsidian/40 hover:bg-obsidian/60 border border-white/10 rounded-4xl px-10 py-6 text-sm text-white outline-none focus:border-seafoam/50 focus:ring-4 focus:ring-seafoam/5 transition-all shadow-2xl placeholder:text-slate-600 font-medium"
               />
               <div className={`absolute right-4 top-4 flex items-center gap-3 transition-opacity ${input.trim() ? 'opacity-100' : 'opacity-0'}`}>
                  <motion.button 
                   whileHover={{ scale: 1.05, rotate: 5 }}
                   whileTap={{ scale: 0.95 }}
+                  aria-label="Send query to Gemini 3"
                   onClick={handleSend}
                   disabled={isLoading || !input.trim()}
                   className="h-14 w-14 nordic-gradient text-obsidian rounded-2xl flex items-center justify-center hover:shadow-cyan/40 transition-all disabled:opacity-50 shadow-2xl"

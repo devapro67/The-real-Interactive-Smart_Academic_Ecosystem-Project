@@ -14,7 +14,15 @@ import {
 import { BackgroundUniverse } from '../../components/VisualEcosystem';
 import gsap from 'gsap';
 
-const NoticeCard = ({ notice }: { notice: any }) => {
+interface Notice {
+  type: string;
+  title: string;
+  content: string;
+  time: string;
+  location: string;
+}
+
+const NoticeCard = ({ notice }: { notice: Notice }) => {
   const [read, setRead] = useState(false);
   
   const getUrgencyStyles = (urgency: string) => {
@@ -32,7 +40,7 @@ const NoticeCard = ({ notice }: { notice: any }) => {
       className={`bg-white/10 backdrop-blur-md border border-white/20 rounded-[40px] p-8 shadow-sm transition-all duration-300 relative group overflow-hidden ${read ? 'opacity-60' : 'opacity-100 scale-[1.01] border-indigo-200/50'}`}
     >
       <div className="flex flex-col md:flex-row gap-8">
-         <div className="flex-shrink-0">
+         <div className="shrink-0">
             <div className={`px-4 py-1.5 rounded-full text-white font-black text-[9px] uppercase tracking-widest inline-block ${getUrgencyStyles(notice.type)}`}>
                {notice.type}
             </div>
@@ -46,7 +54,7 @@ const NoticeCard = ({ notice }: { notice: any }) => {
             </div>
          </div>
 
-         <div className="flex-grow">
+         <div className="grow">
             <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-4 group-hover:text-indigo-600 transition-colors">
                {notice.title}
             </h3>
@@ -90,7 +98,7 @@ export default function Noticeboard() {
     }
   }, []);
 
-  const notices = [
+  const notices: Notice[] = [
     { 
       type: "CRITICAL", 
       title: "Network Expansion Downtime", 
@@ -157,21 +165,21 @@ export default function Noticeboard() {
         </header>
 
         <section className="stagger-el grid grid-cols-1 md:grid-cols-3 gap-6">
-           <div className="bg-indigo-600 rounded-[32px] p-8 text-white flex items-center justify-between">
+           <div className="bg-indigo-600 rounded-4xl p-8 text-white flex items-center justify-between">
               <div>
                  <p className="text-[10px] font-black uppercase tracking-widest text-indigo-200 mb-1">Safety Alerts</p>
                  <p className="text-3xl font-black tracking-tighter">Zero Threat</p>
               </div>
               <ShieldCheck size={48} className="opacity-20" />
            </div>
-           <div className="bg-rose-500 rounded-[32px] p-8 text-white flex items-center justify-between">
+           <div className="bg-rose-500 rounded-4xl p-8 text-white flex items-center justify-between">
               <div>
                  <p className="text-[10px] font-black uppercase tracking-widest text-rose-200 mb-1">Unread Urgents</p>
                  <p className="text-3xl font-black tracking-tighter">1 Pending</p>
               </div>
               <AlertCircle size={48} className="opacity-20" />
            </div>
-           <div className="bg-slate-900 rounded-[32px] p-8 text-white flex items-center justify-between">
+           <div className="bg-slate-900 rounded-4xl p-8 text-white flex items-center justify-between">
               <div>
                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Neural Synced</p>
                  <p className="text-3xl font-black tracking-tighter">100%</p>
@@ -189,7 +197,7 @@ export default function Noticeboard() {
         </div>
 
         <div className="stagger-el flex justify-center py-12">
-           <button className="px-12 py-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-indigo-600 hover:border-indigo-600/50 transition-all">
+           <button className="px-12 py-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-4xl text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-indigo-600 hover:border-indigo-600/50 transition-all">
               Load Archival Broadcasts
            </button>
         </div>
