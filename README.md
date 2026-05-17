@@ -1,20 +1,15 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Smart Academic Ecosystem
 
-# Run and deploy your AI Studio app
+An interactive, high-fidelity academic management portal featuring a custom Nordic Cyber-Quantum design aesthetic. Built as a fully integrated web architecture with live contextual components.
 
-This contains everything you need to run your app locally.
+## 🚀 Core Platform Features
 
-View your app in AI Studio: https://ai.studio/apps/3a41220a-a5fc-48ca-b865-00c45a0a8040
+* **Admin Root Dashboard:** Multi-view tracking panels incorporating dynamic system metrics, toggleable runtime module architecture flags, and live searchable security compliance logs.
+* **Student Suite Workspace:** Fully reactive layout components including interactive Homework Helpers, Grade Analyzers, and personalized structural widgets.
+* **Modern Interface System:** Styled with clean, high-contrast slate layouts, precise pixel cushions, and vibrant cyber-accent color properties.
 
-## Run Locally
+## 🛠️ Technical Stack
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+* **Frontend Framework:** React, TypeScript, Tailwind CSS
+* **Build Architecture:** Vite
+* **Database & Security Ledger:** Supabase Engine
