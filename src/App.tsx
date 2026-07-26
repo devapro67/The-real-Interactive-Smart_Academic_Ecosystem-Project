@@ -148,23 +148,14 @@ export default function App() {
 
   useEffect(() => {
     const restoreSession = async () => {
-      const hasOAuthPayload = window.location.search.includes('access_token') || window.location.search.includes('refresh_token') || window.location.hash.includes('access_token') || window.location.hash.includes('refresh_token');
-
-      if (hasOAuthPayload) {
-        const { data: sessionData, error: getUrlError } = await supabase.auth.getSessionFromUrl({ storeSession: true });
-        if (getUrlError) {
-          console.warn('Supabase OAuth redirect failed:', getUrlError.message || getUrlError);
-        }
-        if (sessionData?.session) {
-          setSession(sessionData.session);
-          await handleAuthUser(sessionData.session.user);
-          return;
-        }
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.warn('Supabase session restore failed:', error.message || error);
       }
-
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      await handleAuthUser(session?.user);
+      if (session) {
+        setSession(session);
+        await handleAuthUser(session.user);
+      }
     };
 
     restoreSession();
@@ -176,28 +167,6 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, [setSession]);
-
-    const pendingRole = localStorage.getItem('pending_role');
-    const existingRole = sbUser.user_metadata?.role;
-    const finalRole = existingRole || pendingRole || 'student';
-
-    // Sync to store
-    useAppStore.getState().setUser({
-      id: sbUser.id,
-      email: sbUser.email,
-      full_name: sbUser.user_metadata?.full_name || 'Academic User',
-      role: finalRole as any,
-      focus_mode: false
-    });
-
-    // If role was pending (OAuth flow), sync back to Supabase metadata if possible
-    if (pendingRole && !existingRole) {
-      await supabase.auth.updateUser({
-        data: { role: pendingRole }
-      });
-      localStorage.removeItem('pending_role');
-    }
-  };
 
   return (
     <Router>
