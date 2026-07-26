@@ -54,6 +54,7 @@ export default function HomeworkHelper() {
   const [activeThreadId, setActiveThreadId] = useState<string>('1');
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
   const [isRenaming, setIsRenaming] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
   
@@ -104,6 +105,8 @@ export default function HomeworkHelper() {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
+    setApiError('');
+
     const userMsg: Message = {
       role: 'user',
       content: input,
@@ -119,33 +122,29 @@ export default function HomeworkHelper() {
     setInput('');
     setIsLoading(true);
 
-    // Simulate Gemini 3 High-Fidelity Response
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/ai/homework-helper', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: input,
+          history: activeThread?.messages ?? [],
+          subject: activeThread?.subject || 'General',
+          depth: 'full'
+        }),
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.message || `AI service returned ${response.status}`);
+      }
+
+      const result = await response.json();
       const assistantMsg: Message = {
         role: 'assistant',
-        content: `### High-Fidelity Academic Solution
-**Gemini 3 Processing Logic Integrated.**
-
-Based on your query regarding the mathematical formulation of this problem, here is the structured step-by-step breakdown:
-
-#### 1. Fundamental Definition
-The problem vectors suggest we use the standard Schrödinger wave-function approach:
-
-\`\`\`math
-i\hbar \frac{\partial}{\partial t} \Psi(\mathbf{r}, t) = \left [ -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r}, t) \right ] \Psi(\mathbf{r}, t)
-\`\`\`
-
-#### 2. Derivation Constants
-Using the values extracted from the global academic matrix, we calculate:
-
-1.  **$\Psi$ Convergence**: Set to $0.982$.
-2.  **$\Delta$ Entropy**: Minimal drift observed.
-
-#### 3. Final Conclusion
-The result converges towards a stable equilibrium point at:
-**$x \approx 4.2 \pm 0.05$**
-
-*Note: For deeper neural drill-down, please specify the sub-module.*`,
+        content: result.answer || 'Sorry, the AI did not return a valid response. Please try again.',
         timestamp: Date.now(),
       };
 
@@ -154,16 +153,30 @@ The result converges towards a stable equilibrium point at:
           ? { ...t, messages: [...t.messages, assistantMsg], updatedAt: Date.now() } 
           : t
       ));
+    } catch (error: any) {
+      const assistantMsg: Message = {
+        role: 'assistant',
+        content: `⚠️ AI service error: ${error?.message || 'Unable to fetch response.'} Please retry or try a different prompt.`,
+        timestamp: Date.now(),
+      };
+
+      setThreads(prev => prev.map(t => 
+        t.id === activeThreadId 
+          ? { ...t, messages: [...t.messages, assistantMsg], updatedAt: Date.now() } 
+          : t
+      ));
+      setApiError(error?.message || 'Unable to contact the AI service.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-full gap-8 relative">
+    <div className="flex flex-col lg:flex-row min-h-screen h-full gap-8 relative">
       <BackgroundUniverse />
 
       {/* Sidebar - Threads Canvas */}
-      <aside className="relative z-10 w-full lg:w-80 flex flex-col gap-6 stagger-el">
+      <aside className="relative z-10 w-full lg:w-80 h-full flex flex-col gap-6 stagger-el">
         <div className="flex items-center justify-between px-2">
           <div className="flex items-center gap-2">
             <div className="p-1.5 nordic-gradient rounded-lg shadow-lg shadow-cyan/20">
@@ -347,6 +360,12 @@ The result converges towards a stable equilibrium point at:
                 </motion.div>
               ))}
             </AnimatePresence>
+
+            {apiError && (
+              <div className="px-6 py-4 bg-rose-500/10 border border-rose-500/20 rounded-4xl text-rose-100 text-[11px] font-black uppercase tracking-[0.2em]">
+                {apiError}
+              </div>
+            )}
 
             {isLoading && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">

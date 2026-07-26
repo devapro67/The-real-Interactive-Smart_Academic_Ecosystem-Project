@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   
   return (
-    <div className="relative flex h-screen overflow-hidden bg-slate-50 font-sans selection:bg-indigo-100 [&_.fixed.top-6.left-6]:hidden">
+    <div className="relative flex min-h-screen overflow-hidden bg-slate-50 font-sans selection:bg-indigo-100 [&_.fixed.top-6.left-6]:hidden">
       {/* Structural Mesh Gradients */}
       <div className="absolute -top-25 -left-25 w-125 h-125 bg-indigo-50 rounded-full blur-[100px] opacity-40"></div>
       <div className="absolute -bottom-25 -right-25 w-150 h-150 bg-fuchsia-50 rounded-full blur-[100px] opacity-40"></div>
@@ -43,8 +43,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="relative flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopNavbar />
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="max-w-7xl mx-auto h-full">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 min-h-screen">
+          <div className="max-w-7xl mx-auto min-h-full h-full">
             <AnimatePresence mode="wait">
               <motion.div 
                 key={location.pathname}
