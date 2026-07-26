@@ -171,7 +171,18 @@ export default function App() {
   return (
     <Router>
       <GlobalBackButton />
-      <Routes>
+      <PageTransitionRoutes />
+    </Router>
+  );
+}
+
+const PageTransitionRoutes = () => {
+  const location = useLocation();
+  const { user } = useAppStore();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -283,6 +294,6 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </Router>
+    </AnimatePresence>
   );
-}
+};
