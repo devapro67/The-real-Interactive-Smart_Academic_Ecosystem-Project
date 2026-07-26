@@ -120,11 +120,54 @@ const GlobalBackButton = () => {
 export default function App() {
   const { user, setSession } = useAppStore();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      handleAuthUser(session?.user);
+  const handleAuthUser = async (sbUser: any) => {
+    if (!sbUser) {
+      useAppStore.getState().setUser(null);
+      return;
+    }
+
+    const pendingRole = localStorage.getItem('pending_role');
+    const existingRole = sbUser.user_metadata?.role;
+    const finalRole = existingRole || pendingRole || 'student';
+
+    useAppStore.getState().setUser({
+      id: sbUser.id,
+      email: sbUser.email,
+      full_name: sbUser.user_metadata?.full_name || 'Academic User',
+      role: finalRole as any,
+      focus_mode: false
     });
+
+    if (pendingRole && !existingRole) {
+      await supabase.auth.updateUser({
+        data: { role: pendingRole }
+      });
+      localStorage.removeItem('pending_role');
+    }
+  };
+
+  useEffect(() => {
+    const restoreSession = async () => {
+      const hasOAuthPayload = window.location.search.includes('access_token') || window.location.search.includes('refresh_token') || window.location.hash.includes('access_token') || window.location.hash.includes('refresh_token');
+
+      if (hasOAuthPayload) {
+        const { data: sessionData, error: getUrlError } = await supabase.auth.getSessionFromUrl({ storeSession: true });
+        if (getUrlError) {
+          console.warn('Supabase OAuth redirect failed:', getUrlError.message || getUrlError);
+        }
+        if (sessionData?.session) {
+          setSession(sessionData.session);
+          await handleAuthUser(sessionData.session.user);
+          return;
+        }
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      await handleAuthUser(session?.user);
+    };
+
+    restoreSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -133,12 +176,6 @@ export default function App() {
 
     return () => subscription.unsubscribe();
   }, [setSession]);
-
-  const handleAuthUser = async (sbUser: any) => {
-    if (!sbUser) {
-      useAppStore.getState().setUser(null);
-      return;
-    }
 
     const pendingRole = localStorage.getItem('pending_role');
     const existingRole = sbUser.user_metadata?.role;
