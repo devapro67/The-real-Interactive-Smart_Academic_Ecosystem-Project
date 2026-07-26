@@ -120,6 +120,18 @@ export default function LoginPage() {
     navigate(data.user.user_metadata?.role === 'teacher' ? '/teacher' : data.user.user_metadata?.role === 'admin' ? '/admin' : '/dashboard');
   };
 
+  const getOAuthErrorMessage = (error: any) => {
+    if (!error?.message) return 'Unable to start Google sign-in. Please try again.';
+    const message = error.message.toLowerCase();
+    if (message.includes('provider is not enabled')) {
+      return 'Google sign-in is not enabled for this Supabase project. Enable Google under Auth > Providers in Supabase.';
+    }
+    if (message.includes('unsupported provider')) {
+      return 'Google sign-in is not available. Please check the OAuth provider configuration.';
+    }
+    return error.message;
+  };
+
   const handleGoogleLogin = async () => {
     if (!isDatabaseConfigured) {
       setIsLoading(true);
@@ -144,8 +156,11 @@ export default function LoginPage() {
       return;
     }
 
+    setError('');
+    setIsLoading(true);
     localStorage.setItem('pending_role', role);
-    await supabase.auth.signInWithOAuth({
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}`,
@@ -154,6 +169,19 @@ export default function LoginPage() {
         }
       }
     });
+
+    if (error) {
+      setError(getOAuthErrorMessage(error));
+      setIsLoading(false);
+      return;
+    }
+
+    if (data?.url) {
+      window.location.href = data.url;
+    } else {
+      setIsLoading(false);
+      setError('Google sign-in could not be started. Please try again.');
+    }
   };
 
   return (
