@@ -21,6 +21,21 @@ export default function LoginPage() {
 
   const isDatabaseConfigured = !!((import.meta as any).env.VITE_SUPABASE_URL && (import.meta as any).env.VITE_SUPABASE_ANON_KEY);
 
+  const getAuthErrorMessage = (error: any) => {
+    if (!error?.message) return 'Incorrect email or password.';
+    const message = error.message.toLowerCase();
+    if (message.includes('invalid login credentials') || message.includes('invalid credentials') || message.includes('invalid email or password')) {
+      return 'Incorrect email or password.';
+    }
+    if (message.includes('invalid email')) {
+      return 'Please enter a valid email address.';
+    }
+    if (message.includes('password')) {
+      return 'Incorrect email or password.';
+    }
+    return error.message;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -50,32 +65,59 @@ export default function LoginPage() {
       return;
     }
 
-    // 2. ABSOLUTE CLIENT-SIDE SANDBOX BYPASS
-    setTimeout(() => {
-      setUser({
-        id: 'sandbox-mock-uid',
-        email: email || 'scholar@smartacademy.edu',
-        full_name: role === 'student' ? 'Demo Scholar' : 'Demo Instructor',
-        role: role || 'student',
-        points: 120,
-        force_password_reset: false,
-        focus_mode: false
-      });
-      setSession({ user: { id: 'sandbox-mock-uid' } });
-      addNotification({
-        type: 'announcement',
-        title: 'Sandbox Simulation Active',
-        content: `Local session authorized for ${role} profile. Redirecting...`
-      });
+    if (!isDatabaseConfigured) {
+      setTimeout(() => {
+        setUser({
+          id: 'sandbox-mock-uid',
+          email: email || 'scholar@smartacademy.edu',
+          full_name: role === 'student' ? 'Demo Scholar' : 'Demo Instructor',
+          role: role || 'student',
+          points: 120,
+          force_password_reset: false,
+          focus_mode: false
+        });
+        setSession({ user: { id: 'sandbox-mock-uid' } });
+        addNotification({
+          type: 'announcement',
+          title: 'Sandbox Simulation Active',
+          content: `Local session authorized for ${role} profile. Redirecting...`
+        });
+        setIsLoading(false);
+        
+        if (role === 'teacher') {
+          navigate('/teacher');
+        } else {
+          navigate('/dashboard');
+        }
+      }, 500);
+      return;
+    }
+
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (signInError) {
+      setError(getAuthErrorMessage(signInError));
       setIsLoading(false);
-      
-      if (role === 'teacher') {
-        navigate('/teacher');
-      } else {
-        navigate('/dashboard');
-      }
-    }, 500);
-    return;
+      return;
+    }
+
+    if (!data?.session || !data?.user) {
+      setError('Authentication succeeded but no active session was returned.');
+      setIsLoading(false);
+      return;
+    }
+
+    setSession(data.session);
+    setUser({
+      id: data.user.id,
+      email: data.user.email || email,
+      full_name: data.user.user_metadata?.full_name || (role === 'student' ? 'Student User' : 'Teacher User'),
+      role: (data.user.user_metadata?.role as 'student' | 'teacher' | 'admin') || role,
+      focus_mode: false
+    });
+
+    setIsLoading(false);
+    navigate(data.user.user_metadata?.role === 'teacher' ? '/teacher' : data.user.user_metadata?.role === 'admin' ? '/admin' : '/dashboard');
   };
 
   const handleGoogleLogin = async () => {

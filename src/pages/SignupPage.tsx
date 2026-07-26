@@ -22,6 +22,21 @@ export default function SignupPage() {
 
   const isDatabaseConfigured = !!((import.meta as any).env.VITE_SUPABASE_URL && (import.meta as any).env.VITE_SUPABASE_ANON_KEY);
 
+  const getAuthErrorMessage = (error: any) => {
+    if (!error?.message) return 'Please check your email and password.';
+    const message = error.message.toLowerCase();
+    if (message.includes('invalid email')) {
+      return 'Please enter a valid email address.';
+    }
+    if (message.includes('duplicate') || message.includes('already registered') || message.includes('already exists')) {
+      return 'That email is already registered. Please log in instead.';
+    }
+    if (message.includes('password')) {
+      return 'Please enter a valid password.';
+    }
+    return error.message;
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -51,31 +66,73 @@ export default function SignupPage() {
       return;
     }
 
-    // 2. ABSOLUTE CLIENT-SIDE SANDBOX BYPASS
-    setTimeout(() => {
-      setUser({
-        id: 'sandbox-mock-uid',
-        email: email || 'scholar@smartacademy.edu',
-        full_name: fullName || 'Demo User',
-        role: role || 'student',
-        points: 120,
-        force_password_reset: false,
-        focus_mode: false
-      });
-      setSession({ user: { id: 'sandbox-mock-uid' } });
-      addNotification({
-        type: 'announcement',
-        title: 'Profile Ghost-Provisioned',
-        content: 'Sandbox: Local profile simulation active. Proceeding to login.'
-      });
-      setIsLoading(false);
-      
-      if (role === 'teacher') {
-        navigate('/teacher');
-      } else {
-        navigate('/dashboard');
+    if (!isDatabaseConfigured) {
+      setTimeout(() => {
+        setUser({
+          id: 'sandbox-mock-uid',
+          email: email || 'scholar@smartacademy.edu',
+          full_name: fullName || 'Demo User',
+          role: role || 'student',
+          points: 120,
+          force_password_reset: false,
+          focus_mode: false
+        });
+        setSession({ user: { id: 'sandbox-mock-uid' } });
+        addNotification({
+          type: 'announcement',
+          title: 'Profile Ghost-Provisioned',
+          content: 'Sandbox: Local profile simulation active. Proceeding to login.'
+        });
+        setIsLoading(false);
+        
+        if (role === 'teacher') {
+          navigate('/teacher');
+        } else {
+          navigate('/dashboard');
+        }
+      }, 500);
+      return;
+    }
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          role
+        }
       }
-    }, 500);
+    });
+
+    if (signUpError) {
+      setError(getAuthErrorMessage(signUpError));
+      setIsLoading(false);
+      return;
+    }
+
+    if (!data?.user) {
+      setError('Registration completed but no user data was returned.');
+      setIsLoading(false);
+      return;
+    }
+
+    setSession(data.session ?? null);
+    setUser({
+      id: data.user.id,
+      email: data.user.email || email,
+      full_name: fullName || 'Student User',
+      role,
+      focus_mode: false
+    });
+
+    setIsLoading(false);
+    addNotification({
+      type: 'announcement',
+      title: 'Registration Successful',
+      content: 'Welcome to Smart Academic. Verify your email if required and continue.'
+    });
+    navigate(role === 'teacher' ? '/teacher' : '/dashboard');
   };
 
   const handleGoogleSignup = async () => {

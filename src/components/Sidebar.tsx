@@ -1,5 +1,6 @@
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import { 
   BookOpen, 
   LayoutDashboard, 
@@ -144,7 +145,11 @@ export default function Sidebar() {
             </div>
 
             <button 
-              onClick={() => { logout(); navigate('/'); }}
+              onClick={async () => {
+                await supabase.auth.signOut();
+                logout();
+                navigate('/');
+              }}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-cyber-red hover:bg-cyber-red/5 transition-all group"
             >
               <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
