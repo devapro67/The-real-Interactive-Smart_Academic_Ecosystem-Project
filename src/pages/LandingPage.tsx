@@ -1,4 +1,4 @@
-import { BackgroundUniverse } from '../components/VisualEcosystem';
+import BackgroundUniverse from '../components/LazyBackgroundUniverse';
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

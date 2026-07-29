@@ -12,7 +12,7 @@ import {
   Paperclip,
   Smile
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 const KanbanColumn = ({ title, tasks, color, onAddTask }: { title: string, tasks: any[], color: string, onAddTask: () => void }) => (

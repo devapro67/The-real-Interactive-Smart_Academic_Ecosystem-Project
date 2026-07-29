@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { motion } from 'motion/react';
 import { Mail, Lock, User as UserIcon, ArrowRight, Loader2, Sparkles, Eye, EyeOff } from 'lucide-react';
-import { BackgroundUniverse } from '../components/VisualEcosystem';
+import BackgroundUniverse from '../components/LazyBackgroundUniverse';
 import { supabase } from '../lib/supabase';
+import { canSend, remainingQuota } from '../lib/emailRateLimiter';
+import { getLocalAccountRole, roleMismatchMessage, saveLocalAccountRole } from '../lib/accountRole';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -66,11 +68,30 @@ export default function SignupPage() {
       return;
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingLocalRole = getLocalAccountRole(normalizedEmail);
+    if (existingLocalRole) {
+      setError(existingLocalRole === role
+        ? 'This email is already registered. Please log in instead.'
+        : roleMismatchMessage(role, existingLocalRole));
+      setIsLoading(false);
+      return;
+    }
+
+    // Rate limit email-triggering actions (signup sends confirmation emails)
+    if (!canSend('signup', email)) {
+      const remaining = remainingQuota('signup', email);
+      setError(`Email send limit reached. Try again later. Remaining quota: ${remaining}`);
+      setIsLoading(false);
+      return;
+    }
+
     if (!isDatabaseConfigured) {
+      saveLocalAccountRole(normalizedEmail, role);
       setTimeout(() => {
         setUser({
-          id: 'sandbox-mock-uid',
-          email: email || 'scholar@smartacademy.edu',
+          id: `sandbox-${encodeURIComponent(normalizedEmail || 'scholar@smartacademy.edu')}`,
+          email: normalizedEmail || 'scholar@smartacademy.edu',
           full_name: fullName || 'Demo User',
           role: role || 'student',
           points: 120,
@@ -117,7 +138,15 @@ export default function SignupPage() {
       return;
     }
 
+    // Supabase can return an existing user without an error when email enumeration protection is enabled.
+    if (data.user.identities && data.user.identities.length === 0) {
+      setError('This email is already registered. Please log in instead.');
+      setIsLoading(false);
+      return;
+    }
+
     setSession(data.session ?? null);
+    saveLocalAccountRole(normalizedEmail, role);
     setUser({
       id: data.user.id,
       email: data.user.email || email,

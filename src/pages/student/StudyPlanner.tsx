@@ -13,7 +13,7 @@ import {
   ChevronRight,
   Brain
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 const PomodoroTimer = () => {

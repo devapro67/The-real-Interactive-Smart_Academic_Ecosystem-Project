@@ -12,7 +12,7 @@ import {
   Award,
   Clock
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 const StudentRow = ({ name, id, gpa, attendance, risk, trend }: any) => (

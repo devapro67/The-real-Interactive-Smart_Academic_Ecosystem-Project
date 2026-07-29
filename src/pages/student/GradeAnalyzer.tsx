@@ -8,7 +8,7 @@ import {
   Calculator,
   Brain,
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 

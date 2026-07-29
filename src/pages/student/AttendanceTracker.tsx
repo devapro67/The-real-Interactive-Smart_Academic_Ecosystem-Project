@@ -10,7 +10,7 @@ import {
   ArrowUpRight,
   ShieldAlert
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 const AttendanceRing = ({ percentage, color }: { percentage: number, color: string }) => {

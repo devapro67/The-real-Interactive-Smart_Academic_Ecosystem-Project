@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { motion } from 'motion/react';
 import { Lock, Mail, ArrowRight, Loader2, Star, Eye, EyeOff } from 'lucide-react';
-import { BackgroundUniverse } from '../components/VisualEcosystem';
+import BackgroundUniverse from '../components/LazyBackgroundUniverse';
 import { supabase } from '../lib/supabase';
+import { getLocalAccountRole, roleMismatchMessage, saveLocalAccountRole } from '../lib/accountRole';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -65,11 +66,20 @@ export default function LoginPage() {
       return;
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingLocalRole = getLocalAccountRole(normalizedEmail);
+    if (existingLocalRole && existingLocalRole !== role) {
+      setError(roleMismatchMessage(role, existingLocalRole));
+      setIsLoading(false);
+      return;
+    }
+
     if (!isDatabaseConfigured) {
+      saveLocalAccountRole(normalizedEmail, role);
       setTimeout(() => {
         setUser({
-          id: 'sandbox-mock-uid',
-          email: email || 'scholar@smartacademy.edu',
+          id: `sandbox-${encodeURIComponent(normalizedEmail || 'scholar@smartacademy.edu')}`,
+          email: normalizedEmail || 'scholar@smartacademy.edu',
           full_name: role === 'student' ? 'Demo Scholar' : 'Demo Instructor',
           role: role || 'student',
           points: 120,
@@ -107,12 +117,21 @@ export default function LoginPage() {
       return;
     }
 
+    const storedRole = data.user.user_metadata?.role as 'student' | 'teacher' | 'admin' | undefined;
+    if (storedRole && storedRole !== role && storedRole !== 'admin') {
+      await supabase.auth.signOut();
+      setError(roleMismatchMessage(role, storedRole));
+      setIsLoading(false);
+      return;
+    }
+
     setSession(data.session);
+    saveLocalAccountRole(normalizedEmail, storedRole || role);
     setUser({
       id: data.user.id,
       email: data.user.email || email,
       full_name: data.user.user_metadata?.full_name || (role === 'student' ? 'Student User' : 'Teacher User'),
-      role: (data.user.user_metadata?.role as 'student' | 'teacher' | 'admin') || role,
+      role: storedRole || role,
       focus_mode: false
     });
 

@@ -17,7 +17,7 @@ import {
   LucideIcon
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 interface ModuleCardProps {

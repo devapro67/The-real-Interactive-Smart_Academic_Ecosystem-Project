@@ -18,10 +18,12 @@ import {
   Filter,
 } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
+import { loadDemoData } from '../../lib/demoData';
+import { supabase } from '../../lib/supabase';
 
 // --- Types ---
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
@@ -186,8 +188,9 @@ const UserRow = ({ user, onAction }: UserRowProps) => (
 
 export default function AdminDashboard() {
   const location = useLocation();
-  const { featureFlags, setFeatureFlags } = useAppStore();
+  const { featureFlags, setFeatureFlags, user: appUser, isAuthenticated } = useAppStore();
   const [logs, setLogs] = useState<AuditLog[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState({ visible: false, message: '' });
 
@@ -208,16 +211,45 @@ export default function AdminDashboard() {
       });
     }
     
-    // Initial logs mock
-    const mockLogs: AuditLog[] = [
-      { id: '1', action: 'AUTH_GATEWAY', actor: 'SYSTEM_DAEMON', target: 'SSO_LAYER', status: 'SUCCESS', timestamp: '12:45:00', description: 'Token Verification Success' },
-      { id: '2', action: 'GIT_SYNC', actor: 'RES_DEVOPS', target: 'RESOURCE_CORE', status: 'COMPLETED', timestamp: '13:02:15', description: 'GitHub Origin Repository Head Sync' },
-      { id: '3', action: 'MESH_AUDIT', actor: 'SHIELD_NODE_4', target: 'AUTH_POOL', status: 'DENIED', timestamp: '13:05:42', description: 'Access Challenge Failed: Unauthorized Node' },
-      { id: '4', action: 'INDEX_REBUILD', actor: 'VECTOR_DB', target: 'GLOBAL_SEARCH', status: 'COMPLETED', timestamp: '13:10:00', description: 'Database Node Re-Indexing Checked' } as AuditLog,
-      { id: '5', action: 'ACL_UPDATE', actor: 'ADMIN_01', target: 'USER_TABLE', status: 'MODIFIED', timestamp: '13:15:20', description: 'Administrative Permission Elevation' },
-    ];
-    setLogs(mockLogs);
+    // Load demo data (customizable by storing JSON in localStorage)
+    const demo = loadDemoData();
+    setLogs(demo.logs as AuditLog[]);
+    // populate user table from demo data by default
+    setUsers([
+      ...demo.admins.map(a => ({ id: a.id, name: a.name, email: a.email, role: a.role, status: a.status })),
+      ...demo.teachers.map(t => ({ id: t.id, name: t.name, email: t.email, role: t.role, status: t.status })),
+      ...demo.students.map(s => ({ id: s.id, name: s.name, email: s.email, role: s.role, status: s.status })),
+    ]);
   }, []);
+
+  // If an authenticated admin is present, try loading real profiles from Supabase
+  useEffect(() => {
+    if (!isAuthenticated || !appUser) return;
+    if (appUser.role !== 'admin') return;
+
+    const fetchProfiles = async () => {
+      try {
+        const { data, error } = await supabase.from('profiles').select('id, full_name, email, role').limit(200);
+        if (error) {
+          console.warn('Failed to fetch real profiles, using demo data', error);
+          return;
+        }
+        if (!data || data.length === 0) return;
+        const mapped = data.map((r: any) => ({
+          id: String(r.id),
+          name: r.full_name || r.email || String(r.id),
+          email: r.email || '',
+          role: r.role || 'student',
+          status: 'Active'
+        }));
+        setUsers(mapped as User[]);
+      } catch (e) {
+        console.warn('Error fetching profiles', e);
+      }
+    };
+
+    fetchProfiles();
+  }, [isAuthenticated, appUser]);
 
   const toggleFlag = (id: string) => {
     const newFlags = { ...featureFlags, [id]: !featureFlags[id] };
@@ -237,14 +269,6 @@ export default function AdminDashboard() {
       log.action.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [logs, searchQuery]);
-
-  const users: User[] = useMemo(() => [
-    { id: 1, name: 'Alex Thompson', email: 'alex.t@edu.vault', role: 'Student', status: 'Active' },
-    { id: 2, name: 'Sarah Miller', email: 's.miller@staff.vault', role: 'Teacher', status: 'Active' },
-    { id: 3, name: 'James Wilson', email: 'j.wilson@admin.vault', role: 'Admin', status: 'Active' },
-    { id: 4, name: 'Maria Garcia', email: 'm.garcia@edu.vault', role: 'Student', status: 'Idle' },
-    { id: 5, name: 'Robert Chen', email: 'r.chen@staff.vault', role: 'Librarian', status: 'Active' },
-  ], []);
 
   const filteredUsers = useMemo(() => {
     return users.filter(user => 

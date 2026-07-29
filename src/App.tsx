@@ -4,28 +4,28 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import { useAppStore } from './store/useAppStore';
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import { Zap } from 'lucide-react';
 
 import Sidebar from './components/Sidebar';
 import TopNavbar from './components/TopNavbar';
 import GlobalAssistant from './components/GlobalAssistant';
-import StudentDashboard from './pages/student/StudentDashboard';
-import HomeworkHelper from './pages/student/HomeworkHelper';
-import StudyPlanner from './pages/student/StudyPlanner';
-import CollaborationHub from './pages/student/CollaborationHub';
-import GradeAnalyzer from './pages/student/GradeAnalyzer';
-import Noticeboard from './pages/student/Noticeboard';
-import AttendanceTracker from './pages/student/AttendanceTracker';
-import ResourceHub from './pages/student/ResourceHub';
-import WellnessCenter from './pages/student/WellnessCenter';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import TeacherDashboard from './pages/teacher/TeacherDashboard';
-import AssignmentBuilder from './pages/teacher/AssignmentBuilder';
-import SmartGrading from './pages/teacher/SmartGrading';
-import StudentAnalytics from './pages/teacher/StudentAnalytics';
-import TeacherComms from './pages/teacher/TeacherComms';
+const StudentDashboard = lazy(() => import('./pages/student/StudentDashboard'));
+const HomeworkHelper = lazy(() => import('./pages/student/HomeworkHelper'));
+const StudyPlanner = lazy(() => import('./pages/student/StudyPlanner'));
+const CollaborationHub = lazy(() => import('./pages/student/CollaborationHub'));
+const GradeAnalyzer = lazy(() => import('./pages/student/GradeAnalyzer'));
+const Noticeboard = lazy(() => import('./pages/student/Noticeboard'));
+const AttendanceTracker = lazy(() => import('./pages/student/AttendanceTracker'));
+const ResourceHub = lazy(() => import('./pages/student/ResourceHub'));
+const WellnessCenter = lazy(() => import('./pages/student/WellnessCenter'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const TeacherDashboard = lazy(() => import('./pages/teacher/TeacherDashboard'));
+const AssignmentBuilder = lazy(() => import('./pages/teacher/AssignmentBuilder'));
+const SmartGrading = lazy(() => import('./pages/teacher/SmartGrading'));
+const StudentAnalytics = lazy(() => import('./pages/teacher/StudentAnalytics'));
+const TeacherComms = lazy(() => import('./pages/teacher/TeacherComms'));
 
 // Internal Dashboard Layout Wrapper
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -181,8 +181,9 @@ const PageTransitionRoutes = () => {
   const { user } = useAppStore();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
+    <Suspense fallback={<RouteLoadingState />}>
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -293,7 +294,16 @@ const PageTransitionRoutes = () => {
         } />
 
         <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </AnimatePresence>
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 };
+
+const RouteLoadingState = () => (
+  <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
+      Loading workspace
+    </div>
+  </div>
+);

@@ -15,7 +15,7 @@ import {
   ClipboardCheck,
   LucideIcon
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 interface StatCardProps {
@@ -27,7 +27,7 @@ interface StatCardProps {
 }
 
 const StatCard = ({ title, value, unit, icon: Icon, color }: StatCardProps) => (
-  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-[32px] p-6 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col group">
+  <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-4xl p-6 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 flex flex-col group">
     <div className="flex justify-between items-start mb-4">
       <div className={`p-3 rounded-2xl ${color} bg-opacity-20 flex items-center justify-center`}>
         <Icon className={color.replace('bg-', 'text-')} size={24} />
@@ -56,7 +56,7 @@ const TeacherActionCard = ({ title, description, icon: Icon, color, stats, path 
   return (
     <div 
       onClick={() => path && navigate(path)}
-      className="bg-white/10 backdrop-blur-md border border-white/20 rounded-[32px] p-8 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden h-full flex flex-col"
+      className="bg-white/10 backdrop-blur-md border border-white/20 rounded-4xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer relative overflow-hidden h-full flex flex-col"
     >
       <div className="relative z-10">
         <div className={`w-14 h-14 rounded-2xl ${color} flex items-center justify-center mb-6 shadow-lg shadow-indigo-100 group-hover:rotate-6 transition-transform`}>
@@ -135,7 +135,7 @@ export default function TeacherDashboard() {
                whileTap={{ scale: 0.95 }}
                onClick={handleCreate}
                disabled={isCreating}
-               className="nordic-gradient text-obsidian px-6 py-4 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-xl shadow-cyan/20 flex items-center gap-3 disabled:opacity-50 transition-all"
+               className="nordic-gradient text-obsidian px-6 py-4 rounded-4xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-cyan/20 flex items-center gap-3 disabled:opacity-50 transition-all"
              >
                {isCreating ? <div className="w-4 h-4 border-2 border-obsidian/20 border-t-obsidian rounded-full animate-spin" /> : <Plus size={16} />} 
                {isCreating ? 'Synchronizing Neural Core...' : 'Create Curriculum'}

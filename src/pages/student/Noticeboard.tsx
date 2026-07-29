@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   AlertCircle
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 interface Notice {

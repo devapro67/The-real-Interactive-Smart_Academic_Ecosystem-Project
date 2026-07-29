@@ -12,7 +12,7 @@ import {
   Search,
   Plus
 } from 'lucide-react';
-import { BackgroundUniverse } from '../../components/VisualEcosystem';
+import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 export default function TeacherComms() {
@@ -71,7 +71,7 @@ export default function TeacherComms() {
           </div>
 
           <div className="flex items-center gap-3">
-             <div className="p-4 glass-card rounded-[24px] flex items-center gap-4">
+             <div className="p-4 glass-card rounded-3xl flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl nordic-gradient flex items-center justify-center text-obsidian">
                    <Activity size={24} />
                 </div>
@@ -110,7 +110,7 @@ export default function TeacherComms() {
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           placeholder="Type your strategic update here..."
-                          className="w-full bg-white/5 border border-white/10 rounded-[32px] px-8 py-8 text-sm font-bold text-white outline-none focus:border-seafoam transition-all h-64 resize-none shadow-sm leading-relaxed"
+                          className="w-full bg-white/5 border border-white/10 rounded-4xl px-8 py-8 text-sm font-bold text-white outline-none focus:border-seafoam transition-all h-64 resize-none shadow-sm leading-relaxed"
                        />
                     </div>
 
@@ -138,7 +138,7 @@ export default function TeacherComms() {
                     <button 
                       onClick={handleSend}
                       disabled={isSending || !message}
-                      className="w-full py-6 nordic-gradient text-obsidian rounded-[32px] font-black uppercase tracking-[0.2em] text-xs shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
+                      className="w-full py-6 nordic-gradient text-obsidian rounded-4xl font-black uppercase tracking-[0.2em] text-xs shadow-2xl flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                     >
                        {isSending ? (
                          <div className="flex items-center gap-2">
