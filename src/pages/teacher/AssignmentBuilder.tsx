@@ -153,7 +153,7 @@ export default function AssignmentBuilder() {
                        <div className="h-full flex flex-col items-center justify-center text-center opacity-30">
                           <Brain size={48} className="mb-6 text-indigo-400" />
                           <p className="text-xs font-black uppercase tracking-widest">Awaiting Neural Logic...</p>
-                          <p className="text-[10px] mt-2 max-w-[200px]">Define parameters to start the synthesis process.</p>
+                          <p className="text-[10px] mt-2 max-w-50">Define parameters to start the synthesis process.</p>
                        </div>
                     )}
                  </div>

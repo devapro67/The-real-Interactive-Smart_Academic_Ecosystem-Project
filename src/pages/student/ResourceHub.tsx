@@ -64,7 +64,7 @@ const FlagModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 sm:p-12">
+    <div className="fixed inset-0 z-300 flex items-center justify-center p-6 sm:p-12">
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
@@ -102,12 +102,12 @@ const FlagModal = ({
                       key={reason}
                       className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all ${
                         reasons.includes(reason) 
-                          ? 'border-[#00F2FE] bg-[#00F2FE]/5' 
+                          ? 'border-seafoam bg-seafoam/5' 
                           : 'border-slate-100 hover:border-slate-200 bg-white'
                       }`}
                     >
                       <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${
-                        reasons.includes(reason) ? 'bg-[#00F2FE] border-[#00F2FE] text-white' : 'border-slate-300'
+                        reasons.includes(reason) ? 'bg-seafoam border-seafoam text-white' : 'border-slate-300'
                       }`}>
                         {reasons.includes(reason) && <Check size={12} strokeWidth={4} />}
                       </div>
@@ -191,8 +191,8 @@ const ResourceCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      className={`group relative bg-white/80 backdrop-blur-xl rounded-[32px] p-8 border transition-all duration-300 ${
-        isHovered ? 'border-[#00F2FE]/40 shadow-[0_20px_50px_rgba(0,242,254,0.1)]' : 'border-white shadow-xl shadow-slate-100'
+      className={`group relative bg-white/80 backdrop-blur-xl rounded-4xl p-8 border transition-all duration-300 ${
+        isHovered ? 'border-seafoam/40 shadow-[0_20px_50px_rgba(0,242,254,0.1)]' : 'border-white shadow-xl shadow-slate-100'
       }`}
     >
       {/* Flag Button */}
@@ -253,7 +253,7 @@ const ResourceCard = ({
           
           <button 
             onClick={handleCopy}
-            className={`p-3 rounded-2xl border transition-all duration-300 flex items-center justify-center min-w-[50px] ${
+            className={`p-3 rounded-2xl border transition-all duration-300 flex items-center justify-center min-w-12.5 ${
               isCopied ? 'bg-green-500 border-green-500 text-white' : 'bg-white border-slate-100 text-slate-400 hover:border-slate-200'
             }`}
           >
@@ -337,14 +337,14 @@ export default function ResourceHub() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 mb-16">
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-6">
-                <div className="px-3 py-1 bg-[#00F2FE] text-obsidian rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-lg shadow-cyan/20">
+                <div className="px-3 py-1 bg-seafoam text-obsidian rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-lg shadow-cyan/20">
                   Global Resource Nodes
                 </div>
                 <div className="h-px w-12 bg-slate-200" />
               </div>
               <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-800 leading-[0.85] mb-8">
                 Resource <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Hub Repository</span>
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">Hub Repository</span>
               </h1>
               <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl">
                  Access an elite matrix of academic assets synchronized via the Gemini 3 telemetry system. Indexing over 1.2M files.
@@ -352,12 +352,12 @@ export default function ResourceHub() {
             </div>
             
             <div className="relative w-full lg:w-96 group">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#00F2FE] transition-colors" size={20} />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-seafoam transition-colors" size={20} />
               <input 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search high-fidelity assets..."
-                className="w-full bg-white border-2 border-slate-100 rounded-3xl pl-16 pr-8 py-6 text-sm text-slate-800 outline-none focus:border-[#00F2FE]/50 shadow-2xl shadow-slate-100 transition-all font-bold placeholder:text-slate-400"
+                className="w-full bg-white border-2 border-slate-100 rounded-3xl pl-16 pr-8 py-6 text-sm text-slate-800 outline-none focus:border-seafoam/50 shadow-2xl shadow-slate-100 transition-all font-bold placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -415,8 +415,8 @@ export default function ResourceHub() {
             {isLoadingMore ? (
               <div className="flex flex-col items-center gap-4">
                 <div className="relative">
-                  <Loader2 size={32} className="animate-spin text-[#00F2FE]" />
-                  <div className="absolute inset-0 blur-lg bg-[#00F2FE]/40 animate-pulse" />
+                  <Loader2 size={32} className="animate-spin text-seafoam" />
+                  <div className="absolute inset-0 blur-lg bg-seafoam/40 animate-pulse" />
                 </div>
                 <div className="flex flex-col">
                    <p className="text-[11px] font-black text-slate-800 uppercase tracking-[0.2em]">Indexing Cloud Nodes...</p>
@@ -447,11 +447,11 @@ export default function ResourceHub() {
       {/* Analytics Banner */}
       <div className="container mx-auto px-12 mb-20">
          <div className="bg-slate-800 rounded-[40px] p-12 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-r from-cyan-500/10 to-transparent pointer-events-none" />
             <div className="relative z-10">
                <div className="flex items-center gap-3 mb-4">
-                  <ShieldAlert className="text-[#00F2FE]" size={20} />
-                  <span className="text-xs font-black uppercase tracking-widest text-[#00F2FE]">Security Protocol Active</span>
+                  <ShieldAlert className="text-seafoam" size={20} />
+                  <span className="text-xs font-black uppercase tracking-widest text-seafoam">Security Protocol Active</span>
                </div>
                <h2 className="text-3xl font-black text-white tracking-tight mb-4">Vault Authentication Level 4</h2>
                <p className="text-slate-400 text-sm max-w-md font-medium leading-relaxed">

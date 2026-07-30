@@ -16,7 +16,7 @@ import BackgroundUniverse from '../../components/LazyBackgroundUniverse';
 import gsap from 'gsap';
 
 const KanbanColumn = ({ title, tasks, color, onAddTask }: { title: string, tasks: any[], color: string, onAddTask: () => void }) => (
-  <div className="flex-1 min-w-[300px] flex flex-col gap-6">
+  <div className="flex-1 min-w-75 flex flex-col gap-6">
     <div className="flex items-center justify-between px-4">
        <div className="flex items-center gap-3">
           <div className={`w-2 h-2 rounded-full ${color}`} />
@@ -30,7 +30,7 @@ const KanbanColumn = ({ title, tasks, color, onAddTask }: { title: string, tasks
     
     <div className="flex flex-col gap-4">
        {tasks.map((task, i) => (
-         <div key={i} className="glass-card p-6 rounded-[2rem] hover:scale-[1.02] transition-all cursor-pointer group">
+         <div key={i} className="glass-card p-6 rounded-4xl hover:scale-[1.02] transition-all cursor-pointer group">
             <div className="flex justify-between items-start mb-4">
                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-seafoam transition-colors">
                   {task.tag}
@@ -54,7 +54,7 @@ const KanbanColumn = ({ title, tasks, color, onAddTask }: { title: string, tasks
        ))}
        <button 
           onClick={onAddTask}
-          className="w-full py-4 border-2 border-dashed border-white/10 rounded-[2rem] flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-seafoam hover:text-seafoam transition-all transition-colors"
+          className="w-full py-4 border-2 border-dashed border-white/10 rounded-4xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:border-seafoam hover:text-seafoam  transition-colors"
         >
           <Plus size={16} /> Add Strategy
        </button>
@@ -146,9 +146,9 @@ export default function CollaborationHub() {
           </div>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-8 min-h-[600px]">
+        <div className="flex flex-col lg:flex-row gap-8 min-h-150">
            {/* Section 1: Project Board */}
-           <div className="flex-[2] stagger-el glass-card rounded-[48px] p-10 flex flex-col overflow-hidden">
+           <div className="flex-2 stagger-el glass-card rounded-[48px] p-10 flex flex-col overflow-hidden">
               <div className="flex items-center justify-between mb-10">
                  <h3 className="text-2xl font-black text-white tracking-tight">Active Operation Board</h3>
                  <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full text-emerald-600 font-black text-[9px] uppercase tracking-widest border border-emerald-500/10">
@@ -178,7 +178,7 @@ export default function CollaborationHub() {
                     </div>
                  </div>
 
-                 <div className="flex-1 space-y-6 overflow-y-auto mb-6 custom-scrollbar pr-2 h-[400px]">
+                 <div className="flex-1 space-y-6 overflow-y-auto mb-6 custom-scrollbar pr-2 h-100">
                     {messages.map((msg, i) => (
                       <div key={i} className={`flex flex-col ${msg.isAI ? 'items-center' : 'items-start'}`}>
                          <div className={`px-4 py-3 rounded-2xl text-xs max-w-[90%] ${msg.isAI ? 'nordic-gradient text-obsidian w-full text-center italic font-bold' : 'bg-white/5 border border-white/10 text-slate-300'}`}>

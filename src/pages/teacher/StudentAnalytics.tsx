@@ -56,7 +56,7 @@ const StudentRow = ({ name, id, gpa, attendance, risk, trend }: any) => (
        )}
     </td>
     <td className="py-6 px-10 text-right">
-       <button className="p-3 glass-card border border-white/10 rounded-2xl text-slate-500 hover:text-seafoam hover:border-seafoam transition-all transition-all shadow-sm">
+       <button className="p-3 glass-card border border-white/10 rounded-2xl text-slate-500 hover:text-seafoam hover:border-seafoam transition-all shadow-sm">
           <Activity size={16} />
        </button>
     </td>

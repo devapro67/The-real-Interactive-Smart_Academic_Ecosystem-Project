@@ -4,7 +4,7 @@ interface WindowRecord {
   timestamps: number[];
 }
 
-const DEFAULT_LIMIT = 10; // allow 10 sends
+const DEFAULT_LIMIT = Infinity; // unlimited sends
 const DEFAULT_WINDOW_MS = 60 * 60 * 1000; // 1 hour window
 
 function storageKey(action: string, identifier: string) {

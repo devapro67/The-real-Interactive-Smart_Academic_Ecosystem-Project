@@ -209,7 +209,7 @@ export default function SmartGrading() {
              { label: "Average Score", value: "82.4%", icon: BarChart2, color: "text-cyan" },
              { label: "Synched Today", value: "12", icon: CheckCircle2, color: "text-emerald-500" }
            ].map((stat, i) => (
-             <div key={i} className="glass-card p-8 rounded-[32px] flex items-center gap-6 shadow-sm">
+             <div key={i} className="glass-card p-8 rounded-4xl flex items-center gap-6 shadow-sm">
                 <div className={`w-12 h-12 rounded-2xl border border-white/5 flex items-center justify-center bg-white/5 ${stat.color}`}>
                    <stat.icon size={20} />
                 </div>
